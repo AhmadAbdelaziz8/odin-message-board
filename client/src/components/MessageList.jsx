@@ -4,18 +4,27 @@ import { Link } from "react-router-dom";
 
 function MessageList() {
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/messages")
       .then((res) => res.json())
-      .then((data) => setMessages(data))
-      .catch((err) => console.error(err));
+      .then((data) => {
+        setMessages(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
   return (
     <div>
       <h1>Messages</h1>
-      {messages.length === 0 ? (
+      {loading ? (
+        <p>Loading messages...</p>
+      ) : messages.length === 0 ? (
         <p>No messages yet.</p>
       ) : (
         <ul>
